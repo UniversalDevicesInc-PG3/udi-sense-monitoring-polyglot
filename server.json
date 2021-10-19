@@ -1,21 +1,26 @@
 {
     "name": "SenseMonitoring",
-    "docs": "https://github.com/therealmysteryman/udi-sense-monitoring-polyglot",
+    "docs": "https://github.com/UniversalDevicesInc-PG3/udi-sense-monitoring-polyglot",
     "type": "python3",
     "executable": "sense_poly.py",
     "install": "install.sh",
     "shortPoll": "60",
     "longPoll": "600",
     "description": "Connect Sense Energy Monitor to UDI ISY 994i.",
-    "notice": "https://github.com/therealmysteryman/udi-sense-monitoring-polyglot/blob/master/LICENSE",
+    "notice": "https://github.com/UniversalDevicesInc-PG3/udi-sense-monitoring-polyglot/blob/master/LICENSE",
+	"logLevel": "INFO",
+	"customParams": {
+		"email": "",
+		"password": ""
+	},
     "credits": [
         {
-            "title": "sense_poly: A Polyglot v2 interface to Sense Energy Monitor ",
+            "title": "sense_poly: A Polyglot v3 interface to Sense Energy Monitor ",
             "author": "AutomationGeek",
-            "version": "2.2.8",
-            "date": "March 16, 2021",
-            "source": "https://github.com/therealmysteryman/udi-sense-monitoring-polyglot",
-            "license": "https://github.com/therealmysteryman/udi-sense-monitoring-polyglot/blob/master/LICENSE"
+            "version": "3.0.0",
+            "date": "October 19, 2021",
+            "source": "https://github.com/UniversalDevicesInc-PG3/udi-sense-monitoring-polyglot",
+            "license": "https://github.com/UniversalDevicesInc-PG3/udi-sense-monitoring-polyglot/blob/master/LICENSE"
         },
 	{
             "title": "udi-poly-template-python: A Polyglot v2 Poly template",
@@ -33,5 +38,14 @@
             "source": "https://github.com/scottbonline/sense",
             "license": "https://github.com/scottbonline/sense/blob/stable/LICENSE.txt"
         }
-    ]
+    ],
+	"store": {
+		"developer": "bpaauwe@bobsplace.com",
+		"purchaseOptions": [
+			{
+				"isPerpetual": true,
+				"price": 0
+			}
+		]
+	}
 }

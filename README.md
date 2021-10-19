@@ -1,18 +1,15 @@
-# Sense Monitoring Polyglot V2 Node Server
+# Sense Monitoring Polyglot V3 Node Server
 
 ![Build Status](https://travis-ci.org/therealmysteryman/udi-sense-monitoring-polyglot.svg?branch=master)
 
-This Poly provides an interface between Sense Monitoring using undocumented API and Polyglot v2 server. Provide Electricity Usage and Status of a Device. This use undocumented API from Sense via a Python Library (https://github.com/scottbonline/sense).
+This Poly provides an interface between Sense Monitoring using undocumented API and Polyglot v3 server. Provide Electricity Usage and Status of a Device. This use undocumented API from Sense via a Python Library (https://github.com/scottbonline/sense).
 
 #### Installation
 
 Installation instructions
-You can install it manually running
 
-1. cd ~/.polyglot/nodeservers
-2. git clone https://github.com/therealmysteryman/udi-sense-monitoring-polyglot.git
-3. run ./install.sh to install the required dependency.
-3. Create a customs variables email -> email_address_of_sense_account, 
+1. Install from the node server store
+2. Create a customs variables email -> email_address_of_sense_account, 
                               password -> password_of_sense_account
 
 #### Usage

@@ -6,7 +6,7 @@ based on the NodeServer template for Polyglot v2 written in Python2/3 by Einstei
 Using this Exploratory Work done from extracting Sense Monitoring Data using Python Library by scottbonline https://github.com/scottbonline/sense
 """
 
-import polyinterface
+import udi_interface
 import time
 import json
 import sys
@@ -14,7 +14,7 @@ from copy import deepcopy
 from threading import Thread
 from sense_energy import Senseable
 
-LOGGER = polyinterface.LOGGER
+LOGGER = udi_interface.LOGGER
 SERVERDATA = json.load(open('server.json'))
 VERSION = SERVERDATA['credits'][0]['version']
 
@@ -29,10 +29,11 @@ def get_profile_info(logger):
     f.close()
     return { 'version': pv }
     
-class Controller(polyinterface.Controller):
+class Controller(udi_interface.Node):
 
-    def __init__(self, polyglot):
-        super(Controller, self).__init__(polyglot)
+    def __init__(self, polyglot, primary, address, name):
+        super(Controller, self).__init__(polyglot, primary, address, name)
+        self.poly = polyglot
         self.name = 'Sense'
         self.email = None
         self.password = None
@@ -40,59 +41,74 @@ class Controller(polyinterface.Controller):
         self.discovery_thread = None
         self.hb = 0
         self.queryON = False
+
+        polyglot.subscribe(polyglot.START, self.start, address)
+        polyglot.subscribe(polyglot.CUSTOMPARAMS, self.parameterHandler)
+        polyglot.subscribe(polyglot.POLL, self.poll)
+
+        polyglot.ready()
+        polyglot.addNode(self)
         
-    def start(self):
-        LOGGER.info('Started Sense NodeServer version %s', str(VERSION))
+    def parameterHandler(self, params):
+        self.poly.Notices.clear()
         try:
-            if 'email' in self.polyConfig['customParams'] and self.email is None:
-                self.email = self.polyConfig['customParams']['email']
+            if 'email' in params and self.email is None:
+                self.email = params['email']
             else:
+                self.poly.Notices['email'] = 'Please provide email address in custom parameters'
                 LOGGER.error('Please provide email address in custom parameters')
                 return False
             
-            if 'password' in self.polyConfig['customParams'] and self.password is None:
-                self.password = self.polyConfig['customParams']['password']
+            if 'password' in params and self.password is None:
+                self.password = params['password']
             else:
+                self.poly.Notices['pass'] = 'Please provide password in custom parameters'
                 LOGGER.error('Please provide password in custom parameters')
                 return False
             
-            self.check_profile()
-            self.heartbeat()
-            self.connectSense()
-            self.discover()
+            if self.password is not "" and self.email is not "":
+                self.heartbeat()
+                self.connectSense()
+                self.discover()
+            else:
+                self.poly.Notices['cfg'] = 'Please provide email address and password'
             
         except Exception as ex:
             LOGGER.error('Error starting Sense NodeServer: %s', str(ex))
             return False
         
-    def shortPoll(self):
-        try :
-            if self.discovery_thread is not None:
-                if self.discovery_thread.is_alive():
-                    LOGGER.debug('Skipping shortPoll() while discovery in progress...')
-                    return
-                else:
-                    self.discovery_thread = None
-            self.update()
-        except Exception as ex:
-            LOGGER.error('Error shortPoll: %s', str(ex))
-            
-    def longPoll(self):
-        try :
-            if self.discovery_thread is not None:
-                if self.discovery_thread.is_alive():
-                    LOGGER.debug('Skipping longPoll() while discovery in progress...')
-                    return
-                else:
-                    self.discovery_thread = None
-            self.connectSense()
-            self.heartbeat()
-        except Exception as ex:
-            LOGGER.error('Error longPoll: %s', str(ex))
+
+    def start(self):
+        LOGGER.info('Started Sense NodeServer version %s', str(VERSION))
+
+    def poll(self, polltype):
+        if 'shortPoll' in polltype:
+            try :
+                if self.discovery_thread is not None:
+                    if self.discovery_thread.is_alive():
+                        LOGGER.debug('Skipping shortPoll() while discovery in progress...')
+                        return
+                    else:
+                        self.discovery_thread = None
+                self.update()
+            except Exception as ex:
+                LOGGER.error('Error shortPoll: %s', str(ex))
+        else:
+            try :
+                if self.discovery_thread is not None:
+                    if self.discovery_thread.is_alive():
+                        LOGGER.debug('Skipping longPoll() while discovery in progress...')
+                        return
+                    else:
+                        self.discovery_thread = None
+                self.connectSense()
+                self.heartbeat()
+            except Exception as ex:
+                LOGGER.error('Error longPoll: %s', str(ex))
         
     def query(self):
-        for node in self.nodes:
-            self.nodes[node].reportDrivers()
+        for node in self.poly.nodes():
+            node.reportDrivers()
             
     def update(self) :       
         try:
@@ -112,9 +128,9 @@ class Controller(polyinterface.Controller):
         except Exception as ex:
             LOGGER.error('query, unable to retrieve Sense Monitor usage: %s', str(ex))
         
-        for node in self.nodes:
-            if  self.nodes[node].queryON == True :
-                self.nodes[node].update()
+        for node in self.poly.nodes():
+            if  node.queryON == True :
+                node.update()
 
     def heartbeat(self):
         self.l_info('heartbeat','hb={}'.format(self.hb))
@@ -148,32 +164,12 @@ class Controller(polyinterface.Controller):
             if device is not None: 
                 try :
                     if device["tags"]["DeviceListAllowed"] == "true" and device['name'] != "Always On" and device['name'] != "Unknown" :
-                        self.addNode(SenseDetectedDevice(self, self.address, device['id'], device['name']))                    
+                        self.poly.addNode(SenseDetectedDevice(self.poly, self.address, device['id'], device['name']))                    
                 except Exception as ex: 
                     LOGGER.error('discover device name: %s', str(device['name']))
     
     def runDiscover(self,command):
         self.discover()
-    
-    def check_profile(self):
-        self.profile_info = get_profile_info(LOGGER)
-        # Set Default profile version if not Found
-        cdata = deepcopy(self.polyConfig['customData'])
-        LOGGER.info('check_profile: profile_info={0} customData={1}'.format(self.profile_info,cdata))
-        if not 'profile_info' in cdata:
-            cdata['profile_info'] = { 'version': 0 }
-        if self.profile_info['version'] == cdata['profile_info']['version']:
-            self.update_profile = False
-        else:
-            self.update_profile = True
-            self.poly.installprofile()
-        LOGGER.info('check_profile: update_profile={}'.format(self.update_profile))
-        cdata['profile_info'] = self.profile_info
-        self.saveCustomData(cdata)
-    
-    def install_profile(self,command):
-        LOGGER.info("install_profile:")
-        self.poly.installprofile()
     
     def delete(self):
         LOGGER.info('Deleting Sense Node Server')
@@ -195,11 +191,12 @@ class Controller(polyinterface.Controller):
                {'driver': 'GV13', 'value': 0, 'uom': 73},
                {'driver': 'GV14', 'value': 0, 'uom': 73}]
     
-class SenseDetectedDevice(polyinterface.Node):
+class SenseDetectedDevice(udi_interface.Node):
 
     def __init__(self, controller, primary, address, name):
         newaddr = address.lower().replace('dcm','').replace('-','')
         super(SenseDetectedDevice, self).__init__(controller, primary,newaddr, name)
+        self.parent = controller.getNode(primary)
         self.queryON = True
         self.nameOrig = name
         self.addressOrig = address
@@ -210,8 +207,6 @@ class SenseDetectedDevice(polyinterface.Node):
         self.setDriver('GV4', 0)
         self.setDriver('GV5', 0)
           
-    def start(self):
-        pass
   
     def query(self):
         self.reportDrivers()
@@ -252,9 +247,11 @@ class SenseDetectedDevice(polyinterface.Node):
     
 if __name__ == "__main__":
     try:
-        polyglot = polyinterface.Interface('SenseNodeServer')
+        polyglot = udi_interface.Interface([])
         polyglot.start()
-        control = Controller(polyglot)
-        control.runForever()
+        polyglot.updateProfile()
+        polyglot.setCustomParamsDoc()
+        Controller(polyglot, 'controller', 'controller', 'SenseNodeServer')
+        polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
         sys.exit(0)

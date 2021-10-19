@@ -1,4 +1,4 @@
-polyinterface>=2.0.19
+udi_interface>=3.0.18
 requests
 websocket-client
 aiohttp
