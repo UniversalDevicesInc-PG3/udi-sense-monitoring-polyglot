@@ -17,8 +17,8 @@
         {
             "title": "sense_poly: A Polyglot v3 interface to Sense Energy Monitor ",
             "author": "Jean-Francois Tremblay (AutomationGeek)",
-            "version": "3.0.0",
-            "date": "October 19, 2021",
+            "version": "3.0.1",
+            "date": "January 10, 2022",
             "source": "https://github.com/UniversalDevicesInc-PG3/udi-sense-monitoring-polyglot",
             "license": "https://github.com/UniversalDevicesInc-PG3/udi-sense-monitoring-polyglot/blob/master/LICENSE"
         },
