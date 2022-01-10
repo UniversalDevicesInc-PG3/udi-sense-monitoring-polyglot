@@ -4,14 +4,14 @@
             <st id="ST" editor="BOOL" />
             <st id="CPW" editor="MWATT" />
             <st id="GV6" editor="MWATT" /> 
-            <st id="GV7" editor="MWATT" /> 
-            <st id="GV8" editor="MWATT" /> 
-            <st id="GV9" editor="MWATT" /> 
-            <st id="GV10" editor="MWATT" /> 
-            <st id="GV11" editor="MWATT" /> 
-            <st id="GV12" editor="MWATT" /> 
-            <st id="GV13" editor="MWATT" />
-            <st id="GV14" editor="MWATT" /> 
+            <st id="GV7" editor="MKWATT" /> 
+            <st id="GV8" editor="MKWATT" /> 
+            <st id="GV9" editor="MKWATT" /> 
+            <st id="GV10" editor="MKWATT" /> 
+            <st id="GV11" editor="MKWATT" /> 
+            <st id="GV12" editor="MKWATT" /> 
+            <st id="GV13" editor="MKWATT" />
+            <st id="GV14" editor="MKWATT" /> 
         </sts>
         <cmds>
             <sends>
