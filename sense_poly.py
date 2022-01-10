@@ -182,14 +182,14 @@ class Controller(udi_interface.Node):
     drivers = [{'driver': 'ST', 'value': 1, 'uom': 2},
                {'driver': 'CPW', 'value': 0, 'uom': 73},
                {'driver': 'GV6', 'value': 0, 'uom': 73},
-               {'driver': 'GV7', 'value': 0, 'uom': 73},
-               {'driver': 'GV8', 'value': 0, 'uom': 73},
-               {'driver': 'GV9', 'value': 0, 'uom': 73},
-               {'driver': 'GV10', 'value': 0, 'uom': 73},
-               {'driver': 'GV11', 'value': 0, 'uom': 73},
-               {'driver': 'GV12', 'value': 0, 'uom': 73},
-               {'driver': 'GV13', 'value': 0, 'uom': 73},
-               {'driver': 'GV14', 'value': 0, 'uom': 73}]
+               {'driver': 'GV7', 'value': 0, 'uom': 30},
+               {'driver': 'GV8', 'value': 0, 'uom': 30},
+               {'driver': 'GV9', 'value': 0, 'uom': 30},
+               {'driver': 'GV10', 'value': 0, 'uom': 30},
+               {'driver': 'GV11', 'value': 0, 'uom': 30},
+               {'driver': 'GV12', 'value': 0, 'uom': 30},
+               {'driver': 'GV13', 'value': 0, 'uom': 30},
+               {'driver': 'GV14', 'value': 0, 'uom': 30}]
     
 class SenseDetectedDevice(udi_interface.Node):
 
