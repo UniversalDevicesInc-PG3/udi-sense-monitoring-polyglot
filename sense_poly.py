@@ -15,8 +15,7 @@ from threading import Thread
 from sense_energy import Senseable
 
 LOGGER = udi_interface.LOGGER
-SERVERDATA = json.load(open('server.json'))
-VERSION = SERVERDATA['credits'][0]['version']
+VERSION = '3.0.1'
 
 def get_profile_info(logger):
     pvf = 'profile/version.txt'
@@ -235,9 +234,9 @@ class SenseDetectedDevice(udi_interface.Node):
             
     drivers = [{'driver': 'ST', 'value': 0, 'uom': 78},
                {'driver': 'GV5', 'value': 0, 'uom': 73}, 
-               {'driver': 'GV1', 'value': 0, 'uom': 25}, 
+               {'driver': 'GV1', 'value': 0, 'uom': 56}, 
                {'driver': 'GV2', 'value': 0, 'uom': 30}, 
-               {'driver': 'GV3', 'value': 0, 'uom': 25}, 
+               {'driver': 'GV3', 'value': 0, 'uom': 56}, 
                {'driver': 'GV4', 'value': 0, 'uom': 30} ]
 
     id = 'SENSEDEVICE'
@@ -248,7 +247,7 @@ class SenseDetectedDevice(udi_interface.Node):
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([])
-        polyglot.start()
+        polyglot.start(VERSION)
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         Controller(polyglot, 'controller', 'controller', 'SenseNodeServer')

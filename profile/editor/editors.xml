@@ -9,15 +9,15 @@
     </editor>
     
     <editor id="MWATT">
-        <range uom="73" min="0" max="10000" />
+        <range uom="73" min="0" max="50000" />
     </editor>
     
     <editor id="MKWATT">
-        <range uom="30" min="0" max="1000" />
+        <range uom="30" min="0" max="5000" />
     </editor>
     
     <editor id="MINT">
-        <range uom="25" min="0" max="10000" prec="0" />
+        <range uom="56" min="0" max="10000" prec="0" />
     </editor>
     
 </editors>
