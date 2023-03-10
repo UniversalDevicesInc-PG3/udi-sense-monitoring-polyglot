@@ -15,7 +15,7 @@ from threading import Thread
 from sense_energy import Senseable
 
 LOGGER = udi_interface.LOGGER
-VERSION = '3.0.1'
+VERSION = '3.0.2'
 
 def get_profile_info(logger):
     pvf = 'profile/version.txt'
