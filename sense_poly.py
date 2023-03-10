@@ -65,7 +65,7 @@ class Controller(udi_interface.Node):
                 LOGGER.error('Please provide password in custom parameters')
                 return False
             
-            if self.password is not "" and self.email is not "":
+            if self.password != "" and self.email != "":
                 self.heartbeat()
                 self.connectSense()
                 self.discover()
