@@ -2,4 +2,4 @@ udi_interface>=3.0.18
 requests
 websocket-client
 aiohttp
-sense_energy>=0.8.1
+sense_energy==0.8.1
